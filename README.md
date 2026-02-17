@@ -262,3 +262,12 @@ Review the following before extended use:
 
 *AutoTublify is an educational project developed as part of a BSc IT cybersecurity curriculum.*
 <img width="480" height="568" alt="Screenshot from 2026-02-17 10-41-15" src="https://github.com/user-attachments/assets/5fa72a39-bfbe-432e-ad63-3dffbb1a6dbe" />
+
+<img width="482" height="558" alt="Screenshot from 2026-02-17 10-41-30" src="https://github.com/user-attachments/assets/b71b2917-abb6-46a2-b3a1-977e972479b8" />
+
+<img width="482" height="558" alt="Screenshot from 2026-02-17 10-41-38" src="https://github.com/user-attachments/assets/41d068a5-e9bb-47a9-83a8-7a8e8a784d7e" />
+
+
+<img width="478" height="594" alt="Screenshot from 2026-02-17 10-41-50" src="https://github.com/user-attachments/assets/80d62a33-3a39-425d-8045-11eb0fdfd987" />
+
+
