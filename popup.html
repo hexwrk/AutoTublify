@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AutoTublify</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      width: 480px;
+      min-height: 560px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0a0a0a;
+      color: #e0e0e0;
+      line-height: 1.6;
+      font-size: 13px;
+    }
+
+    /* -------------------------------------------------------------------------
+       HEADER
+    ------------------------------------------------------------------------- */
+
+    .header {
+      background: linear-gradient(135deg, #1a1a1a 0%, #0f0f0f 100%);
+      border-bottom: 1px solid #252525;
+      padding: 20px 24px;
+      position: relative;
+    }
+
+    .header::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #7c3aed 50%, transparent);
+    }
+
+    .header-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 14px;
+    }
+
+    .logo {
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      overflow: hidden;
+      padding: 6px;
+    }
+
+    .logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+    }
+
+    .header-title {
+      font-size: 18px;
+      font-weight: 600;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+    }
+
+    .header-subtitle {
+      font-size: 11px;
+      color: #777;
+      margin-top: 1px;
+    }
+
+    .status-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      background: #111;
+      border-radius: 6px;
+      font-size: 12px;
+      color: #888;
+    }
+
+    .status-indicator {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #444;
+    }
+
+    .status-dot.active   { background: #22c55e; }
+    .status-dot.processing { background: #f59e0b; }
+    .status-dot.error    { background: #ef4444; }
+
+    /* -------------------------------------------------------------------------
+       TABS
+    ------------------------------------------------------------------------- */
+
+    .container {
+      padding: 18px 22px 22px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 18px;
+      background: #111;
+      padding: 4px;
+      border-radius: 7px;
+    }
+
+    .tab {
+      flex: 1;
+      padding: 9px 12px;
+      background: transparent;
+      border: none;
+      color: #666;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      border-radius: 5px;
+      transition: background 0.15s, color 0.15s;
+      letter-spacing: 0.01em;
+    }
+
+    .tab.active {
+      background: #7c3aed;
+      color: #fff;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* -------------------------------------------------------------------------
+       SECTIONS
+    ------------------------------------------------------------------------- */
+
+    .section {
+      background: #141414;
+      border: 1px solid #222;
+      padding: 16px 18px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      color: #888;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 500;
+      color: #aaa;
+      margin-bottom: 7px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    textarea {
+      width: 100%;
+      padding: 10px 13px;
+      background: #0a0a0a;
+      border: 1px solid #252525;
+      border-radius: 6px;
+      color: #e0e0e0;
+      font-size: 13px;
+      font-family: inherit;
+      outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    input:focus,
+    textarea:focus {
+      border-color: #7c3aed;
+      box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.12);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: #555;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+      font-family: 'SF Mono', 'Consolas', monospace;
+      font-size: 12px;
+    }
+
+    .hint {
+      font-size: 11px;
+      color: #666;
+      margin-top: 7px;
+      line-height: 1.5;
+    }
+
+    /* -------------------------------------------------------------------------
+       BUTTONS
+    ------------------------------------------------------------------------- */
+
+    .btn {
+      width: 100%;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s, background 0.15s;
+      letter-spacing: 0.01em;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%);
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(109, 40, 217, 0.25);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(109, 40, 217, 0.35);
+    }
+
+    .btn-secondary {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      color: #aaa;
+      margin-top: 8px;
+    }
+
+    .btn-secondary:hover:not(:disabled) {
+      background: #1e1e1e;
+      border-color: #333;
+      color: #d0d0d0;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+      color: #fff;
+      margin-top: 8px;
+    }
+
+    .btn:disabled {
+      background: #1a1a1a;
+      color: #555;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+      border: 1px solid #222;
+    }
+
+    /* -------------------------------------------------------------------------
+       TOGGLE SWITCH
+    ------------------------------------------------------------------------- */
+
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 14px;
+      background: #0f0f0f;
+      border-radius: 6px;
+      margin-bottom: 12px;
+    }
+
+    .toggle-row-label {
+      font-size: 13px;
+      font-weight: 500;
+      color: #d0d0d0;
+    }
+
+    .toggle-row-desc {
+      font-size: 11px;
+      color: #666;
+      margin-top: 2px;
+    }
+
+    .switch {
+      position: relative;
+      width: 46px;
+      height: 25px;
+      flex-shrink: 0;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      inset: 0;
+      background: #2a2a2a;
+      border-radius: 25px;
+      cursor: pointer;
+      transition: background 0.25s;
+    }
+
+    .slider::before {
+      content: '';
+      position: absolute;
+      width: 17px;
+      height: 17px;
+      left: 4px;
+      bottom: 4px;
+      background: #666;
+      border-radius: 50%;
+      transition: transform 0.25s, background 0.25s;
+    }
+
+    input:checked + .slider {
+      background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+    }
+
+    input:checked + .slider::before {
+      transform: translateX(21px);
+      background: #fff;
+    }
+
+    /* -------------------------------------------------------------------------
+       STATUS MESSAGES
+    ------------------------------------------------------------------------- */
+
+    .status-msg {
+      padding: 10px 13px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      margin-top: 10px;
+      display: none;
+      line-height: 1.5;
+    }
+
+    .status-msg.success {
+      background: rgba(34, 197, 94, 0.08);
+      border: 1px solid rgba(34, 197, 94, 0.2);
+      color: #4ade80;
+      display: block;
+    }
+
+    .status-msg.error {
+      background: rgba(239, 68, 68, 0.08);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: #f87171;
+      display: block;
+    }
+
+    /* -------------------------------------------------------------------------
+       QUEUE DISPLAY
+    ------------------------------------------------------------------------- */
+
+    .queue-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 11px 13px;
+      background: #0f0f0f;
+      border-radius: 6px;
+      margin-bottom: 7px;
+    }
+
+    .queue-info {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .queue-title {
+      font-weight: 500;
+      color: #e0e0e0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: 12px;
+    }
+
+    .queue-meta {
+      font-size: 10px;
+      color: #666;
+      margin-top: 2px;
+    }
+
+    .queue-badge {
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 10px;
+      font-weight: 600;
+      flex-shrink: 0;
+      background: #1a1a1a;
+      color: #888;
+      border: 1px solid #2a2a2a;
+    }
+
+    .queue-badge.processing {
+      background: rgba(245, 158, 11, 0.1);
+      border-color: rgba(245, 158, 11, 0.25);
+      color: #fbbf24;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 30px 16px;
+      color: #555;
+      font-size: 12px;
+    }
+
+    .empty-state-title {
+      font-weight: 600;
+      color: #666;
+      margin-bottom: 4px;
+    }
+
+    /* -------------------------------------------------------------------------
+       FOOTER
+    ------------------------------------------------------------------------- */
+
+    .footer {
+      text-align: center;
+      padding: 14px 20px;
+      font-size: 10px;
+      color: #444;
+      border-top: 1px solid #181818;
+      letter-spacing: 0.02em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-row">
+      <div class="logo">
+        <img src="icon.png" alt="AutoTublify">
+      </div>
+      <div>
+        <div class="header-title">AutoTublify</div>
+        <div class="header-subtitle">Automated video summarisation via Claude AI</div>
+      </div>
+    </div>
+
+    <div class="status-bar">
+      <div class="status-indicator">
+        <div class="status-dot" id="statusDot"></div>
+        <span id="statusText">Initialising...</span>
+      </div>
+      <span id="queueCount" style="font-size: 11px;">Queue: 0</span>
+    </div>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <div class="container">
+    <div class="tabs">
+      <button class="tab active" data-tab="auto">Automatic</button>
+      <button class="tab" data-tab="manual">Manual</button>
+      <button class="tab" data-tab="queue">Queue</button>
+      <button class="tab" data-tab="settings">Settings</button>
+    </div>
+
+    <!-- AUTOMATIC TAB -->
+    <div id="tab-auto" class="tab-content active">
+      <!-- TEMPORARY: Feature in development -->
+      <div class="empty-state" style="padding: 60px 20px;">
+        <div style="font-size: 48px; margin-bottom: 16px;">🚧</div>
+        <div class="empty-state-title" style="font-size: 16px; margin-bottom: 8px;">Feature In Progress</div>
+        <div style="color: #666; font-size: 13px; line-height: 1.6;">
+          Automatic playlist detection is currently under development.<br>
+          Please use the <strong>Manual</strong> tab to process videos.
+        </div>
+      </div>
+
+      <!-- ORIGINAL CODE - COMMENTED OUT FOR DEVELOPMENT
+      <div class="section">
+        <div class="toggle-row">
+          <div>
+            <div class="toggle-row-label">Automatic Processing</div>
+            <div class="toggle-row-desc">Detect and process playlist saves automatically</div>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="autoMode" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <label for="targetPlaylists">Monitored Playlists</label>
+        <textarea
+          id="targetPlaylists"
+          placeholder="Leave blank to monitor all playlists, or enter names — one per line:&#10;AI&#10;Learning&#10;Cybersecurity"
+        ></textarea>
+        <p class="hint">If specified, only videos saved to these playlists will be processed. Case-insensitive.</p>
+      </div>
+
+      <button id="saveAutoSettings" class="btn btn-primary">Save Settings</button>
+      <div id="autoStatus" class="status-msg"></div>
+      END OF COMMENTED CODE -->
+    </div>
+
+    <!-- MANUAL TAB -->
+    <div id="tab-manual" class="tab-content">
+      <div class="section">
+        <div class="section-label">Video URL</div>
+        <input
+          type="text"
+          id="manualUrl"
+          placeholder="https://www.youtube.com/watch?v=..."
+          autocomplete="off"
+        >
+        <p class="hint">Paste any YouTube video URL. A summary will be generated and saved immediately.</p>
+      </div>
+
+      <button id="processManual" class="btn btn-primary">Generate Summary</button>
+      <div id="manualStatus" class="status-msg"></div>
+    </div>
+
+    <!-- QUEUE TAB -->
+    <div id="tab-queue" class="tab-content">
+      <div class="section">
+        <div class="section-label">Processing Queue</div>
+        <div id="queueList"></div>
+      </div>
+
+      <button id="clearQueue" class="btn btn-danger">Clear Queue</button>
+    </div>
+
+    <!-- SETTINGS TAB -->
+    <div id="tab-settings" class="tab-content">
+      <div class="section">
+        <div class="section-label">Anthropic API Key</div>
+        <input
+          type="password"
+          id="apiKey"
+          placeholder="sk-ant-api03-..."
+          autocomplete="off"
+        >
+        <p class="hint">
+          Obtain your key from
+          <a href="https://console.anthropic.com" target="_blank"
+             style="color: #8b5cf6;">console.anthropic.com</a>.
+          Keys are stored locally and never transmitted beyond the Anthropic API.
+        </p>
+      </div>
+
+      <div class="section">
+        <div class="section-label">Save Location</div>
+        <input
+          type="text"
+          id="saveLocation"
+          value="YouTube Summaries/"
+        >
+        <p class="hint">Subfolder within your default Downloads directory.</p>
+      </div>
+
+      <button id="saveSettings" class="btn btn-primary">Save Settings</button>
+      <button id="testApi" class="btn btn-secondary">Test API Connection</button>
+      <div id="settingsStatus" class="status-msg"></div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div class="footer">
+    AutoTublify v2.5 &nbsp;|&nbsp; Claude AI &nbsp;|&nbsp; Anthropic
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

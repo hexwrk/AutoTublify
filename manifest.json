@@ -1,0 +1,47 @@
+{
+  "manifest_version": 3,
+  "name": "AutoTublify",
+  "version": "2.5.1",
+  "description": "Automatic YouTube playlist monitoring and AI-powered video summarization using Claude.",
+
+  "permissions": [
+    "storage",
+    "downloads",
+    "notifications",
+    "webNavigation",
+    "tabs"
+  ],
+
+  "host_permissions": [
+    "https://www.youtube.com/*",
+    "https://api.anthropic.com/*"
+  ],
+
+  "background": {
+    "service_worker": "background.js"
+  },
+
+  "content_scripts": [
+    {
+      "matches": ["https://www.youtube.com/*"],
+      "js": ["content.js"],
+      "run_at": "document_idle"
+    }
+  ],
+
+  "action": {
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icon.png",
+      "48": "icon.png",
+      "128": "icon.png"
+    },
+    "default_title": "AutoTublify"
+  },
+
+  "icons": {
+    "16": "icon.png",
+    "48": "icon.png",
+    "128": "icon.png"
+  }
+}
