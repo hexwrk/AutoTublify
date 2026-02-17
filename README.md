@@ -261,3 +261,4 @@ Review the following before extended use:
 ---
 
 *AutoTublify is an educational project developed as part of a BSc IT cybersecurity curriculum.*
+<img width="480" height="568" alt="Screenshot from 2026-02-17 10-41-15" src="https://github.com/user-attachments/assets/5fa72a39-bfbe-432e-ad63-3dffbb1a6dbe" />
